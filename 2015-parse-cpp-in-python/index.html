@@ -1,0 +1,964 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="原文地址
+Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的llvm-clang-samples repository仓库。
+对于那些需要在Python中去解析和分析C代码的人，在发现pycparser后一定会很兴奋。然而，如果变成是去解析C++，pycpa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Python中使用Clang来解析C++【翻译】">
+<meta property="og:url" content="http://yoursite.com/2015-parse-cpp-in-python/index.html">
+<meta property="og:site_name" content="爱丸工作室">
+<meta property="og:description" content="原文地址
+Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的llvm-clang-samples repository仓库。
+对于那些需要在Python中去解析和分析C代码的人，在发现pycparser后一定会很兴奋。然而，如果变成是去解析C++，pycpa">
+<meta property="og:updated_time" content="2016-08-24T11:12:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在Python中使用Clang来解析C++【翻译】">
+<meta name="twitter:description" content="原文地址
+Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的llvm-clang-samples repository仓库。
+对于那些需要在Python中去解析和分析C代码的人，在发现pycparser后一定会很兴奋。然而，如果变成是去解析C++，pycpa">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015-parse-cpp-in-python/"/>
+
+  <title> 在Python中使用Clang来解析C++【翻译】 | 爱丸工作室 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?b2d1d608df6e1feb98359cf1c21b575e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">爱丸工作室</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">追求极致，享受游戏带来的乐趣</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                在Python中使用Clang来解析C++【翻译】
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程相关/" itemprop="url" rel="index">
+                    <span itemprop="name">编程相关</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015-parse-cpp-in-python/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-parse-cpp-in-python/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>   <a href="http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang" target="_blank" rel="external">原文地址</a></p>
+<p>Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的<a href="https://github.com/eliben/llvm-clang-samples" target="_blank" rel="external">llvm-clang-samples repository仓库</a>。</p>
+<p>对于那些需要在Python中去解析和分析C代码的人，在发现<a href="https://github.com/eliben/pycparser" target="_blank" rel="external">pycparser</a>后一定会很兴奋。然而，如果变成是去解析C++，pycparser并不是好的解决办法。当我被问及关于在pycparser中增加支持C++的计划时，我的回答通常是 – 没有这样的计划，你应该去别处找找。尤其地，是在<a href="http://clang.llvm.org/" target="_blank" rel="external">Clang</a>中。</p>
+<p>Clang是一款针对C，C++和Object C的编译器前端。它是由Apple支持的一款具有自由协议的开源项目，并使用它们自己的工具。连同它的父项目 – LLVM编译器后端，Clang渐渐成为一款gcc的强大替代品。在Clang（包括LLVM）身后有着一流的开发团队，并且它的代码在开源环境下也是C++代码中设计最好的之一。Clang的发展十分积极，密切关注着最新的C++标准。</p>
+<p>于是当我被问关于解析C++的问题的时候，我的回答总是Clang。诚然，它还存在着一些小问题。人们喜欢pycparser因为它是Python实现的，而Clang的API接口是C++，并不是最极客并友好的语言，退一步来说。</p>
+<a id="more"></a>
+<h3 id="libclang"><a href="#libclang" class="headerlink" title="libclang"></a>libclang</h3><p>下面进入libclang。不太久之前，Clang的团队明智地意识到Clang并不仅仅可以用于编译器，也可以是分析C/C++/ObjC代码的工具。事实上，Apple的自研Xcode开发工具就是用Clang作为内置库来进行代码提示，交叉引用，等等。</p>
+<p>能使Clang如此被利用的组件我们称之为libclang。它是C API编写的，并且Clang团队郑重声明保证其稳定性，允许使用者在抽象语法树（AST）的等级上去检查解析代码。</p>
+<p>更多的技术上来讲，libclang是一个通过使用面向公众的API来对Clang进行包装的共享库，并只定义在一份C语言头文件中：clang/include/clang-c/Index.h 。</p>
+<h3 id="Python绑定到libclang"><a href="#Python绑定到libclang" class="headerlink" title="Python绑定到libclang"></a>Python绑定到libclang</h3><p>libclang于 <em>clang/bindings/python</em> 中附带了Python绑定，位于 <em>clang.cindex</em> 模块中。这个模块依赖于 <em>ctypes</em> 去装载动态的libclang库，并试图尽可能地去封装libclang作为Python API接口。</p>
+<h3 id="文档？"><a href="#文档？" class="headerlink" title="文档？"></a>文档？</h3><p>非常不幸，目前libclang的相关文档以及Python绑定的状态十分糟糕。官方文档会根据源代码而进行开发（自动生成Doxygen HTML）。此外，我所能找到的所有在线文档只有一份<a href="http://llvm.org/devmtg/2010-11/Gregor-libclang.pdf" target="_blank" rel="external">演示</a>和一些来自Clang开发邮件列表中过时的邮件信息。</p>
+<p>好的一方面，即使你只浏览了一遍 <strong>Index.h</strong> 头文件也能记住它试图要实现什么，它的API并不难懂（具体实现也是一样易懂，哪怕你对Clang的内部只熟悉一点）。另一个需要看的地方是 <strong>clang/tools/c-index-test</strong> 工具，它是用来测试API接口并示例它们该如何使用。</p>
+<p>对于Python绑定，也完全没有任何文档，除了它发布的源代码和一些相关示例。因此，我希望这篇文章能够起到帮助！</p>
+<h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h3><p>设置使用Python绑定很简单：</p>
+<ul>
+<li><p>你的脚本需要能够找到 <strong>clang.cindex</strong> 模块。所以要适当地复制它或建立 <strong>PYTHONPATH</strong> 来指向它。</p>
+</li>
+<li><p><strong>clang.cindex</strong> 需要能够找到 <strong>libclang.so</strong> 共享库。取决于你如何构建/安装Clang，你需要适当地拷贝它或是建立 <strong>LD_LIBRARY_PATH</strong> 来指向它的位置。在Windows操作系统，则是 <strong>libclang.dll</strong> 并且需要设置到 <strong>PATH</strong> 环境变量中去。</p>
+</li>
+</ul>
+<p>准备就绪后，要去调用 <strong>import clang.cindex</strong> 并开始使用。</p>
+<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>让我们开始一段简单的示例。下面的脚本使用 <strong>libclang</strong> 的Python绑定来找到一个给定文件中的所有引用类型：</p>
+<pre><code>#!/usr/bin/env python
+&quot;&quot;&quot; Usage: call with &lt;filename&gt; &lt;typename&gt;
+&quot;&quot;&quot;
+
+import sys
+import clang.cindex
+
+def find_typerefs(node, typename):
+    &quot;&quot;&quot; Find all references to the type named &apos;typename&apos;
+    &quot;&quot;&quot;
+    if node.kind.is_reference():
+        ref_node = clang.cindex.Cursor_ref(node)
+        if ref_node.spelling == typename:
+            print &apos;Found %s [line=%s, col=%s]&apos; % (
+                typename, node.location.line, node.location.column)
+    # Recurse for children of this node
+    for c in node.get_children():
+        find_typerefs(c, typename)
+
+index = clang.cindex.Index.create()
+tu = index.parse(sys.argv[1])
+print &apos;Translation unit:&apos;, tu.spelling
+find_typerefs(tu.cursor, sys.argv[2])
+</code></pre><p>假设我们在下面这段C++代码中调用它：</p>
+<pre><code>class Person {
+};
+
+class Room {
+public:
+    void add_person(Person person)
+    {
+        // do stuff
+    }
+
+private:
+    Person* people_in_room;
+};
+
+template &lt;class T, int N&gt;
+class Bag&lt;T, N&gt; {
+};
+
+int main()
+{
+    Person* p = new Person();
+    Bag&lt;Person, 42&gt; bagofpersons;
+
+    return 0;
+}
+</code></pre><p>执行去查找 <strong>Persion</strong> 引用类型，我们会得到：</p>
+<pre><code>Translation unit: simple_demo_src.cpp
+Found Person [line=7, col=21]
+Found Person [line=13, col=5]
+Found Person [line=24, col=5]
+Found Person [line=24, col=21]
+Found Person [line=25, col=9]
+</code></pre><h3 id="理解它是如何工作的"><a href="#理解它是如何工作的" class="headerlink" title="理解它是如何工作的"></a>理解它是如何工作的</h3><p>为了理解这个例子做了什么，我们需要明白它内部运作的3个层次：</p>
+<ul>
+<li>概念层次 – 我们从要被解析的源代码获取的信息是什么，并且它是如何储存的；</li>
+<li>libclang层次 – <strong>libclang</strong> 的正式C API，要比Python绑定代码更容易阅读，虽然只在代码中有一些备注；</li>
+<li>Python绑定层次，这是我们直接调用的。</li>
+</ul>
+<h4 id="创建索引并解析代码"><a href="#创建索引并解析代码" class="headerlink" title="创建索引并解析代码"></a>创建索引并解析代码</h4><p>我们需要在最开始时添加如下代码：</p>
+<pre><code>index = clang.cindex.Index.create()
+tu = index.parse(sys.argv[1])
+</code></pre><p>一个”index”代表一组编译和链接在一起的翻译单元。我们需要一些分组翻译单元的方法，如果试图理解它们的话。举例来说，我们可能想要找到一些定义在头文件中的引用类型，以及在一些其他的源文件中。 <strong>Index.create()</strong> 调用C API函数 <strong>clang_createIndex</strong>。</p>
+<p>接下来，我们使用 <strong>Index’s parse</strong> 方法来解析一个文件中单独的翻译单元。调用 <strong>clang_parseTranslationUnit</strong>，一个在C API中的关键函数。它的注释提到：</p>
+<blockquote>
+<p> 这个程序是Clang C API中的主要入口，提供将一份源文件解析成一个翻译单元的功能，并且能查询API中其他的函数。</p>
+</blockquote>
+<p>这是一个强大的函数 – 它能可选择性地正常接受全套标识并传到命令行编译器。它返回一个封装了的 <strong>CXTranslationUnit</strong> 对象，作为一个封装了Python绑定的翻译单元。这个翻译单元能够被查询，例如翻译单元的名字可以通过 <strong>spelling</strong> 属性表示：</p>
+<pre><code>print &apos;Translation unit:&apos;, tu.spelling
+</code></pre><p>然而，它最重要的属性是 – <strong>cursor</strong>。一个 <em>cursor</em> 是libclang中的关键抽象，它表示一个被解析翻译单元的抽象语法树中的一些节点。在一个单一抽象下的程序中，cursor整合不同类型的实体，提供一组常见的操作，如获取它的位置和子cursor。 <strong>TranslationUnit.cursor</strong> 返回一个翻译单元最高层级的cursor，作为索引它的抽象语法树的声明点。</p>
+<h4 id="使用curosrs进行工作"><a href="#使用curosrs进行工作" class="headerlink" title="使用curosrs进行工作"></a>使用curosrs进行工作</h4><p>Python绑定将 <strong>libclang</strong> 中的cursor封装成 <strong>Cursor</strong> 对象。它有许多属性，其中最有趣的包括：</p>
+<ul>
+<li><strong>kind</strong> – 一个枚举指定了这个curosr指向的抽象语法树节点的种类；</li>
+<li><strong>spelling</strong> – 节点的源代码名称</li>
+<li><strong>location</strong> – 被解析节点的源代码位置</li>
+<li><p><strong>get_children</strong> – 它的子节点</p>
+<p><strong>get_children</strong> 需要专门说明一下，因为这是一个在C和Python的API接口分歧上的特殊点。</p>
+<p><strong>libclang</strong> C API 基于访问者想法。根据给定的cursor走到抽象语法树，用户代码提供了一个针对 <strong>clang_visitChildren</strong> 的回调函数。然后在一个给定的抽象语法树的所有子节点上来调用这个函数。</p>
+</li>
+</ul>
+<p>而另一方面的Python绑定，会封装在内部访问，通过 <strong>Cursor.get_children</strong> 提供一个Python化的迭代API，返回一个指定cursor的子节点。它仍然可以通过Python来直接访问最原始的API接口，但是使用 <strong>get_children</strong> 更加地方便。在我们的例子中，我们使用 <strong>get_children</strong> 来递归访问一个节点的所有子节点：</p>
+<pre><code>for c in node.get_children():
+   find_typerefs(c, typename)
+</code></pre><h4 id="Python绑定的一些局限性"><a href="#Python绑定的一些局限性" class="headerlink" title="Python绑定的一些局限性"></a>Python绑定的一些局限性</h4><p>不幸的是，Python绑定还不够成熟并存在一些缺陷，因为它是一项正在进行中的工作。举一个例子，假设我们想要找到和记录这个文件中的所有函数调用：</p>
+<pre><code>bool foo()
+{
+    return true;
+}
+
+void bar()
+{
+    foo();
+    for (int i = 0; i &lt; 10; ++i)
+        foo();
+}
+
+int main()
+{
+    bar();
+    if (foo())
+        bar();
+}
+</code></pre><p>让我们写下这段代码：</p>
+<pre><code>import sys
+import clang.cindex
+
+def callexpr_visitor(node, parent, userdata):
+    if node.kind == clang.cindex.CursorKind.CALL_EXPR:
+        print &apos;Found %s [line=%s, col=%s]&apos; % (
+                node.spelling, node.location.line, node.location.column)
+    return 2 # means continue visiting recursively
+
+index = clang.cindex.Index.create()
+tu = index.parse(sys.argv[1])
+clang.cindex.Cursor_visit(
+        tu.cursor,
+        clang.cindex.Cursor_visit_callback(callexpr_visitor),
+        None)
+</code></pre><p>这次直接使用 <strong>libclang</strong> 的访问API，结果如下：</p>
+<pre><code>Found None [line=8, col=5]
+Found None [line=10, col=9]
+Found None [line=15, col=5]
+Found None [line=16, col=9]
+Found None [line=17, col=9]
+</code></pre><p>既然被记录的位置是正确的，那为什么节点的名字会是 <strong>Node</strong> 呢？仔细研究过libclang的代码后发现，我们不应该来打印 <em>spelling</em> ，而应该是 <em>display</em> 。在C API中它意味着 <strong>clang_getCursorDisplayName</strong> 而不是 <strong>clang_getCursorSpelling</strong> 。但是，Python绑定并没有暴露 <strong>clang_getCursorDisplayName</strong> 接口！</p>
+<p>然而，我们不应该就此放弃。Python绑定的相关源代码十分地直截了当，并且很容易通过 <strong>ctypes</strong> 来在C API中开放额外的函数。只要在 <strong>bindings/python/clang/cindex.py</strong> 中添加如下几行：</p>
+<pre><code>Cursor_displayname = lib.clang_getCursorDisplayName
+Cursor_displayname.argtypes = [Cursor]
+Cursor_displayname.restype = _CXString
+Cursor_displayname.errcheck = _CXString.from_result
+</code></pre><p>现在我们可以使用 <strong>Cursor_displayname</strong>，在脚本中通过 <strong>clang.cindex.Cursor_displayname(node)</strong> 来代替 <strong>node.spelling</strong> 。这样可以得到我们想要的输出结果：</p>
+<pre><code>Found foo [line=8, col=5]
+Found foo [line=10, col=9]
+Found bar [line=15, col=5]
+Found foo [line=16, col=9]
+Found bar [line=17, col=9]
+</code></pre><p> <em>更新提示（06.07.2011）</em>：来自这篇文章的灵感，我向Clang项目中提交了关于开放 <strong>Cursor_displayname</strong> 接口的代码，也修复了一些在Python绑定中的其他问题。它已经在Clang的核心开发版本134460中被提交，并且现在应该在主干trunk上可用。</p>
+<h4 id="libclang的一些局限性"><a href="#libclang的一些局限性" class="headerlink" title="libclang的一些局限性"></a>libclang的一些局限性</h4><p>综上所述，Python绑定的一些局限性相对容易客服。自从 <strong>libclang</strong> 提供了一个简单易行的C API，这仅仅就是适当使用 <strong>ctypes</strong> 结构来开放暴露附加函数的问题而已。对于任何有些Python经验的人来说，这都不是一个大问题。</p>
+<p>然而一些 <strong>libclang</strong> 本身的局限性，例如，假设我们想要找到一段代码中的所有返回语句，结果发现通过当前 <strong>libclang</strong> 的API是办不到的。大致浏览 <strong>Index.h</strong> 就会发现其原因。</p>
+<p> <strong>enum CXCursorKind</strong> 枚举了我们在 <strong>libclang</strong> 中可能遇到的cursor节点的种类。下面是这部分相关的代码：</p>
+<pre><code>/* Statements */
+CXCursor_FirstStmt                     = 200,
+/**
+ * \brief A statement whose specific kind is not exposed via this
+ * interface.
+ *
+ * Unexposed statements have the same operations as any other kind of
+ * statement; one can extract their location information, spelling,
+ * children, etc. However, the specific kind of the statement is not
+ * reported.
+ */
+CXCursor_UnexposedStmt                 = 200,
+
+/** \brief A labelled statement in a function.
+ *
+ * This cursor kind is used to describe the &quot;start_over:&quot; label statement in
+ * the following example:
+ *
+ * \code
+ *   start_over:
+ *     ++counter;
+ * \endcode
+ *
+ */
+CXCursor_LabelStmt                     = 201,
+
+CXCursor_LastStmt                      = CXCursor_LabelStmt,
+</code></pre><p>忽略用于正确性测试的占位符 <strong>CXCursor_FirstStmt</strong> 和 <strong>CXCursor_LastStmt</strong> ，这唯一需要注意的是lable语句。所有其他的声明语句将会被 <strong>CXCursor_UnexposedStmt</strong> 所替代。</p>
+<p>去理解这个缺陷的原理，有建设性的思考是 <strong>libclang</strong> 的主要目标。目前，API主要用于集成开发环境当中，我们想要知道一切类型和引用符号，但不用明确关心我们看到的声明或是语句的种类。</p>
+<p>值得庆幸的是，从Clang的邮件开发列表讨论组中可以收集到这种局限性并非蓄意而为之。在 <strong>libclang</strong> 中根据需要添加的东西，显然没有一个需要 <strong>libclang</strong> 来辨别声明种类的不同，因此没有人增加这个特性。如果它对某人来说足够重要，他可以随时在邮件列表中提出一个修补补丁。特别是，这个具体的缺陷（缺少声明种类）是很容易被解决的。看看在 <strong>libclang/CXCursor.cpp</strong> 中的 <strong>cxcursor::MakeCXCursor</strong> ，很明显找到这些”种类”是如何生成的：</p>
+<pre><code>CXCursor cxcursor::MakeCXCursor(Stmt *S, Decl *Parent,
+                            CXTranslationUnit TU) {
+      assert(S &amp;&amp; TU &amp;&amp; &quot;Invalid arguments!&quot;);
+      CXCursorKind K = CXCursor_NotImplemented;
+
+      switch (S-&gt;getStmtClass()) {
+      case Stmt::NoStmtClass:
+        break;
+
+      case Stmt::NullStmtClass:
+      case Stmt::CompoundStmtClass:
+      case Stmt::CaseStmtClass:
+
+      ... // many other statement classes
+
+      case Stmt::MaterializeTemporaryExprClass:
+        K = CXCursor_UnexposedStmt;
+        break;
+
+      case Stmt::LabelStmtClass:
+        K = CXCursor_LabelStmt;
+            break;
+
+      case Stmt::PredefinedExprClass:
+
+      .. //  many other statement classes
+
+      case Stmt::AsTypeExprClass:
+        K = CXCursor_UnexposedExpr;
+        break;
+
+      .. // more code
+  }
+</code></pre><p>这是在 <strong>Stmt.getStmtClass()</strong> 中的一个简单而巨大的switch语句，并且仅对 <strong>Stmt::LabelStmtClass</strong> 有一种非 <strong>CXCursor_UnexposedStmt</strong> 类型。所以建议添加的”类型”不要是特别重要的：</p>
+<ol>
+<li>向 <strong>CXCursorKind</strong> 添加另一个枚举值，在 <strong>CXCursor_FirstStmt</strong> 和 <strong>CXCurosr_LastStmt</strong> 之间；</li>
+<li>在 <strong>cxcursor::MakeCXCursor</strong> 中的switch语句中添加另一份条件case以识别适合的类和返回值种类；</li>
+<li>在Python绑定中暴露相关枚举值。</li>
+</ol>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>希望这篇文章介绍 <strong>libclang</strong> 的Python绑定的文章能够起到帮助。尽管这些组件缺乏外部文档，但它们被很好的编写和注释，并且源代码足够的浅显易懂。</p>
+<p>记住这些积极发展、并包装在十分强大的C/C++/ObjC的解析引擎里的API，显得十分重要。仅代表个人观点，Clang是当下最新的C++解析库中最好的选择，没有之一。</p>
+<p>在 <strong>libclang</strong> 本身以及Python绑定中存在着一些美中不足的小限制。这些都是最近相对除了Clang之外， <strong>libclang</strong> 的附带结果，毕竟它还是一个非常年轻的项目。</p>
+<p>幸运的是，希望我这篇文章能够告诉你们这些限制并非极度难以解决的。仅需要少量Python和C的专业知识，就能够扩展Python绑定，并且一点对Clang的理解也可以增强奠定 <strong>libclang</strong> 本身。另外， <strong>libclang</strong> 仍然在积极地发展当中。我十分确信这些API将会随着时间的推移而持续改进，并且限制也会越来越少。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创 | 欢迎打赏</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://7xlmp2.com1.z0.glb.clouddn.com/alipay.png" alt="俆基慧 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag">#python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016-01-08-mac-config-opengl/" rel="next" title="在Mac系统上搭建OpenGL开发环境">
+                <i class="fa fa-chevron-left"></i> 在Mac系统上搭建OpenGL开发环境
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015-11-28-android-plugin/" rel="prev" title="Android插件机制研究分析">
+                Android插件机制研究分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015-parse-cpp-in-python/"
+           data-title="在Python中使用Clang来解析C++【翻译】" data-url="http://yoursite.com/2015-parse-cpp-in-python/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="俆基慧" />
+          <p class="site-author-name" itemprop="name">俆基慧</p>
+          <p class="site-description motion-element" itemprop="description">爱生活 | 爱丸子</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/aiplay" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3175247962?refer_flag=1001030201_&is_hot=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/aiplayx" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/aiplay" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#libclang"><span class="nav-number">1.</span> <span class="nav-text">libclang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python绑定到libclang"><span class="nav-number">2.</span> <span class="nav-text">Python绑定到libclang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文档？"><span class="nav-number">3.</span> <span class="nav-text">文档？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置"><span class="nav-number">4.</span> <span class="nav-text">设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单示例"><span class="nav-number">5.</span> <span class="nav-text">简单示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解它是如何工作的"><span class="nav-number">6.</span> <span class="nav-text">理解它是如何工作的</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建索引并解析代码"><span class="nav-number">6.1.</span> <span class="nav-text">创建索引并解析代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用curosrs进行工作"><span class="nav-number">6.2.</span> <span class="nav-text">使用curosrs进行工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python绑定的一些局限性"><span class="nav-number">6.3.</span> <span class="nav-text">Python绑定的一些局限性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#libclang的一些局限性"><span class="nav-number">6.4.</span> <span class="nav-text">libclang的一些局限性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">俆基慧</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"aiplay"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
