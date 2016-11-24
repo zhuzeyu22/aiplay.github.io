@@ -386,6 +386,132 @@ shutil.rmtree(path)
             
               
                 
+                <a class="post-title-link" href="/2015-parse-cpp-in-python/" itemprop="url">
+                  在Python中使用Clang来解析C++【翻译】
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程相关/" itemprop="url" rel="index">
+                    <span itemprop="name">编程相关</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015-parse-cpp-in-python/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-parse-cpp-in-python/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>   <a href="http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang">原文地址</a></p>
+<p>Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的<a href="https://github.com/eliben/llvm-clang-samples">llvm-clang-samples repository仓库</a>。</p>
+<p>对于那些需要在Python中去解析和分析C代码的人，在发现<a href="https://github.com/eliben/pycparser">pycparser</a>后一定会很兴奋。然而，如果变成是去解析C++，pycparser并不是好的解决办法。当我被问及关于在pycparser中增加支持C++的计划时，我的回答通常是 – 没有这样的计划，你应该去别处找找。尤其地，是在<a href="http://clang.llvm.org/">Clang</a>中。</p>
+<p>Clang是一款针对C，C++和Object C的编译器前端。它是由Apple支持的一款具有自由协议的开源项目，并使用它们自己的工具。连同它的父项目 – LLVM编译器后端，Clang渐渐成为一款gcc的强大替代品。在Clang（包括LLVM）身后有着一流的开发团队，并且它的代码在开源环境下也是C++代码中设计最好的之一。Clang的发展十分积极，密切关注着最新的C++标准。</p>
+<p>于是当我被问关于解析C++的问题的时候，我的回答总是Clang。诚然，它还存在着一些小问题。人们喜欢pycparser因为它是Python实现的，而Clang的API接口是C++，并不是最极客并友好的语言，退一步来说。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015-parse-cpp-in-python/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015-09-18-luabinding-in-cocos2dx/" itemprop="url">
                   基于Cocos2d-x的lua绑定机制
                 </a>
@@ -605,132 +731,6 @@ shutil.rmtree(path)
 </ul>
           <div class="post-more-link text-center">
             <a class="btn" href="/2015-11-28-android-plugin/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015-parse-cpp-in-python/" itemprop="url">
-                  在Python中使用Clang来解析C++【翻译】
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
-              2016-08-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程相关/" itemprop="url" rel="index">
-                    <span itemprop="name">编程相关</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015-parse-cpp-in-python/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-parse-cpp-in-python/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>   <a href="http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang">原文地址</a></p>
-<p>Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的<a href="https://github.com/eliben/llvm-clang-samples">llvm-clang-samples repository仓库</a>。</p>
-<p>对于那些需要在Python中去解析和分析C代码的人，在发现<a href="https://github.com/eliben/pycparser">pycparser</a>后一定会很兴奋。然而，如果变成是去解析C++，pycparser并不是好的解决办法。当我被问及关于在pycparser中增加支持C++的计划时，我的回答通常是 – 没有这样的计划，你应该去别处找找。尤其地，是在<a href="http://clang.llvm.org/">Clang</a>中。</p>
-<p>Clang是一款针对C，C++和Object C的编译器前端。它是由Apple支持的一款具有自由协议的开源项目，并使用它们自己的工具。连同它的父项目 – LLVM编译器后端，Clang渐渐成为一款gcc的强大替代品。在Clang（包括LLVM）身后有着一流的开发团队，并且它的代码在开源环境下也是C++代码中设计最好的之一。Clang的发展十分积极，密切关注着最新的C++标准。</p>
-<p>于是当我被问关于解析C++的问题的时候，我的回答总是Clang。诚然，它还存在着一些小问题。人们喜欢pycparser因为它是Python实现的，而Clang的API接口是C++，并不是最极客并友好的语言，退一步来说。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015-parse-cpp-in-python/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1043,8 +1043,8 @@ sudo make install
             
               
                 
-                <a class="post-title-link" href="/2015-05-07-vim-ultisnips/" itemprop="url">
-                  VIM下使用自定义代码片段
+                <a class="post-title-link" href="/2014-11-07-github-operation/" itemprop="url">
+                  常用的Git操作
                 </a>
               
             
@@ -1071,8 +1071,8 @@ sudo make install
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编辑器/" itemprop="url" rel="index">
-                    <span itemprop="name">编辑器</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -1087,8 +1087,8 @@ sudo make install
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-05-07-vim-ultisnips/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-05-07-vim-ultisnips/" itemprop="commentsCount"></span>
+                <a href="/2014-11-07-github-operation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014-11-07-github-operation/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1112,21 +1112,33 @@ sudo make install
 
       
         
-          <h3 id="常见片段定义"><a href="#常见片段定义" class="headerlink" title="常见片段定义"></a>常见片段定义</h3><h4 id="片段内置默认文本-占位符可以包含其他UltiSnips元素"><a href="#片段内置默认文本-占位符可以包含其他UltiSnips元素" class="headerlink" title="片段内置默认文本(占位符可以包含其他UltiSnips元素)"></a>片段内置默认文本(占位符可以包含其他UltiSnips元素)</h4><pre><code>snippet a
-&lt;a href=&quot;$1&quot;${2: class=&quot;${3:link}&quot;}&gt;
-   $0
-&lt;/a&gt;
-endsnippet
-</code></pre><h4 id="单词开头自动大写"><a href="#单词开头自动大写" class="headerlink" title="单词开头自动大写"></a>单词开头自动大写</h4><pre><code>snippet title &quot;Titelize in the Transformation&quot;
-${1:a text}
-${1/\w+\s*/\u$0/g}
-endsnippet
-</code></pre><h4 id="条件替换"><a href="#条件替换" class="headerlink" title="条件替换"></a>条件替换</h4><pre><code>snippet cond
-${1:some_text}${1/(o)|(t)|..*/(?1:ne)(?2:wo)/}
-endsnippet
+          <h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><pre><code>git config -global user.name &lt;name&gt;     #设置提交者名字
+
+git config -global user.email &lt;email&gt;   #设置提交者邮箱
+
+git config -global core.editor &lt;editor&gt; #设置默认文本编辑器
+
+git config -global merge.tool &lt;tool&gt;    #设置解决合并冲突时差异分析工具
+</code></pre><h3 id="修改和提交"><a href="#修改和提交" class="headerlink" title="修改和提交"></a>修改和提交</h3><pre><code>git add .                       #添加所有改动过的文件
+
+git add &lt;file&gt;                  #添加指定的文件
+
+git mv &lt;old&gt; &lt;new&gt;              #文件重命名
+
+git rm &lt;file&gt;                   #删除文件
+
+git rm -cached &lt;file&gt;           #停止跟踪文件但不删除
+
+git commit -m &lt;file&gt;            #提交指定文件
+
+git commit -m &quot;commit message&quot;  #提交所有更新过的文件
+
+git commit -amend               #修改最后一次提交
+
+git commit -C HEAD -a -amend    #增补提交
 </code></pre>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-05-07-vim-ultisnips/#more" rel="contents">
+            <a class="btn" href="/2014-11-07-github-operation/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1160,7 +1172,7 @@ endsnippet
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1201,7 +1213,7 @@ endsnippet
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1209,7 +1221,7 @@ endsnippet
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
