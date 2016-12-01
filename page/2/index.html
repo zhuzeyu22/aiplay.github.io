@@ -258,8 +258,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015-05-07-vim-ultisnips/" itemprop="url">
-                  VIM下使用自定义代码片段
+                <a class="post-title-link" href="/2015-11-28-android-plugin/" itemprop="url">
+                  Android插件机制研究分析
                 </a>
               
             
@@ -286,8 +286,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编辑器/" itemprop="url" rel="index">
-                    <span itemprop="name">编辑器</span>
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
                   </a>
                 </span>
 
@@ -302,8 +302,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-05-07-vim-ultisnips/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-05-07-vim-ultisnips/" itemprop="commentsCount"></span>
+                <a href="/2015-11-28-android-plugin/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-11-28-android-plugin/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -327,21 +327,19 @@
 
       
         
-          <h3 id="常见片段定义"><a href="#常见片段定义" class="headerlink" title="常见片段定义"></a>常见片段定义</h3><h4 id="片段内置默认文本-占位符可以包含其他UltiSnips元素"><a href="#片段内置默认文本-占位符可以包含其他UltiSnips元素" class="headerlink" title="片段内置默认文本(占位符可以包含其他UltiSnips元素)"></a>片段内置默认文本(占位符可以包含其他UltiSnips元素)</h4><pre><code>snippet a
-&lt;a href=&quot;$1&quot;${2: class=&quot;${3:link}&quot;}&gt;
-   $0
-&lt;/a&gt;
-endsnippet
-</code></pre><h4 id="单词开头自动大写"><a href="#单词开头自动大写" class="headerlink" title="单词开头自动大写"></a>单词开头自动大写</h4><pre><code>snippet title &quot;Titelize in the Transformation&quot;
-${1:a text}
-${1/\w+\s*/\u$0/g}
-endsnippet
-</code></pre><h4 id="条件替换"><a href="#条件替换" class="headerlink" title="条件替换"></a>条件替换</h4><pre><code>snippet cond
-${1:some_text}${1/(o)|(t)|..*/(?1:ne)(?2:wo)/}
-endsnippet
-</code></pre>
+          <h3 id="初识插件化"><a href="#初识插件化" class="headerlink" title="初识插件化"></a>初识插件化</h3><p>早在Android 2.3的年代，依旧存在着著名的 <strong>65535</strong> 问题，即应用项目内的最大方法数不能超过65535个，否则无法编译通过。随着应用业务逻辑的不断发展，无论如何优化代码，也很快会遇到这个瓶颈。多数的解决方案，是通过拆分并装载多个dex字节码文件来规避这个问题。但对于结构复杂、业务逻辑繁重的应用来说，仅仅拆分dex文件是远远不够的，因此，插件化的这个概念也随之应运而生。</p>
+<p>所谓 <strong>插件化</strong> ，我们可以理解为将一个单独的apk文件，通过某种机制，使其可以在未安装的状态下直接运行。这样一来，我们便可以将主应用的多个业务模块拆分出来，单独编译成不同的apk文件，不仅可以减轻主应用的体积，还能使业务逻辑模块化，降低模块间的耦合。</p>
+<p>简要概括下来，插件化主要包括以下三个优点：</p>
+<ul>
+<li><p>动态更新<br>  当某个业务模块需要改进更新的时候，不用再升级安装庞大的宿主应用，仅仅自动下载对应的轻量插件便可以，并且无需用户去安装。这对于产品的迭代优化，紧急Bug的修复都有着很大的帮助。</p>
+</li>
+<li><p>可定制化<br>  插件化在降低模块耦合的同时，也为应用的定制给予了极大的便利。针对不同的发布渠道或是运营需要，宿主应用能够在不修改代码的情况下从容地进行定制，大大降低了发布成本。</p>
+</li>
+<li><p>并行协作开发<br>  对于大型应用，独立的插件可以在不同的团队之间并行进行开发，缩短项目进程，提高开发效率。</p>
+</li>
+</ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-05-07-vim-ultisnips/#more" rel="contents">
+            <a class="btn" href="/2015-11-28-android-plugin/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -470,138 +468,6 @@ shutil.rmtree(path)
 </code></pre>
           <div class="post-more-link text-center">
             <a class="btn" href="/2014-11-05-python-file-io/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015-11-28-android-plugin/" itemprop="url">
-                  Android插件机制研究分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
-              2016-08-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015-11-28-android-plugin/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-11-28-android-plugin/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="初识插件化"><a href="#初识插件化" class="headerlink" title="初识插件化"></a>初识插件化</h3><p>早在Android 2.3的年代，依旧存在着著名的 <strong>65535</strong> 问题，即应用项目内的最大方法数不能超过65535个，否则无法编译通过。随着应用业务逻辑的不断发展，无论如何优化代码，也很快会遇到这个瓶颈。多数的解决方案，是通过拆分并装载多个dex字节码文件来规避这个问题。但对于结构复杂、业务逻辑繁重的应用来说，仅仅拆分dex文件是远远不够的，因此，插件化的这个概念也随之应运而生。</p>
-<p>所谓 <strong>插件化</strong> ，我们可以理解为将一个单独的apk文件，通过某种机制，使其可以在未安装的状态下直接运行。这样一来，我们便可以将主应用的多个业务模块拆分出来，单独编译成不同的apk文件，不仅可以减轻主应用的体积，还能使业务逻辑模块化，降低模块间的耦合。</p>
-<p>简要概括下来，插件化主要包括以下三个优点：</p>
-<ul>
-<li><p>动态更新<br>  当某个业务模块需要改进更新的时候，不用再升级安装庞大的宿主应用，仅仅自动下载对应的轻量插件便可以，并且无需用户去安装。这对于产品的迭代优化，紧急Bug的修复都有着很大的帮助。</p>
-</li>
-<li><p>可定制化<br>  插件化在降低模块耦合的同时，也为应用的定制给予了极大的便利。针对不同的发布渠道或是运营需要，宿主应用能够在不修改代码的情况下从容地进行定制，大大降低了发布成本。</p>
-</li>
-<li><p>并行协作开发<br>  对于大型应用，独立的插件可以在不同的团队之间并行进行开发，缩短项目进程，提高开发效率。</p>
-</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015-11-28-android-plugin/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1040,8 +906,8 @@ sudo make install
             
               
                 
-                <a class="post-title-link" href="/2014-11-07-github-operation/" itemprop="url">
-                  常用的Git操作
+                <a class="post-title-link" href="/2015-01-24-opensource-license-intro/" itemprop="url">
+                  常用开源协议介绍
                 </a>
               
             
@@ -1068,8 +934,8 @@ sudo make install
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/编程相关/" itemprop="url" rel="index">
+                    <span itemprop="name">编程相关</span>
                   </a>
                 </span>
 
@@ -1084,8 +950,8 @@ sudo make install
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2014-11-07-github-operation/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2014-11-07-github-operation/" itemprop="commentsCount"></span>
+                <a href="/2015-01-24-opensource-license-intro/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-24-opensource-license-intro/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1109,33 +975,159 @@ sudo make install
 
       
         
-          <h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><pre><code>git config -global user.name &lt;name&gt;     #设置提交者名字
-
-git config -global user.email &lt;email&gt;   #设置提交者邮箱
-
-git config -global core.editor &lt;editor&gt; #设置默认文本编辑器
-
-git config -global merge.tool &lt;tool&gt;    #设置解决合并冲突时差异分析工具
-</code></pre><h3 id="修改和提交"><a href="#修改和提交" class="headerlink" title="修改和提交"></a>修改和提交</h3><pre><code>git add .                       #添加所有改动过的文件
-
-git add &lt;file&gt;                  #添加指定的文件
-
-git mv &lt;old&gt; &lt;new&gt;              #文件重命名
-
-git rm &lt;file&gt;                   #删除文件
-
-git rm -cached &lt;file&gt;           #停止跟踪文件但不删除
-
-git commit -m &lt;file&gt;            #提交指定文件
-
-git commit -m &quot;commit message&quot;  #提交所有更新过的文件
-
-git commit -amend               #修改最后一次提交
-
-git commit -C HEAD -a -amend    #增补提交
-</code></pre>
+          <h3 id="Apache-2-0"><a href="#Apache-2-0" class="headerlink" title="Apache-2.0"></a><strong>Apache-2.0</strong></h3><ul>
+<li><em>Apache Lience</em></li>
+<li>支持商业用途，允许使用者修改和重新发布代码(以其他协议形式)</li>
+<li>协议规则<ul>
+<li>需要给代码的用户一份Apache Lience</li>
+<li>如果修改了代码，需要在被修改的文件中说明</li>
+<li>在延伸的代码中（修改或衍生的代码）需要带有原来代码中的协议、商标、专利声明和其他原来作者规定需要包含的说明</li>
+<li>如果再发布的产品中包含了Notice文件，则需要在Notice文件中带有Apache Lience</li>
+</ul>
+</li>
+</ul>
+<h3 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a><strong>BSD</strong></h3><ul>
+<li><em>Berkerley Software Distribution</em></li>
+<li>支持商业用途，可使用、修改源码</li>
+<li>协议规则<ul>
+<li>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议</li>
+<li>如果再发布的只是二进制类库/软件，则需要在类库/软件的文档那个和版权声明中包含原来代码中的BSD协议</li>
+<li>不可以用开源代码的“作者/机构的名字”或“原来产品的名字”做市场推广</li>
+</ul>
+</li>
+</ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014-11-07-github-operation/#more" rel="contents">
+            <a class="btn" href="/2015-01-24-opensource-license-intro/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015-04-28-tcp-term/" itemprop="url">
+                  TCP相关的术语总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015-04-28-tcp-term/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-04-28-tcp-term/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>传输控制协议(Transmission Controller Protocol)，是一个面向连接的协议，TCP套接字是一种流套接字，为用户进程提供可靠的全双工字节流。</p>
+<hr>
+<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>用户数据报协议(User Datagram Protocl)，是一个无连接协议，UDP套接字是一种数据报套接字，UDP数据报不能保证最终到达目的地，不保证各个数据报的先后顺序夸网络后保持不变，也不保证每个数据报只到达一次。</p>
+<hr>
+<h3 id="ARP"><a href="#ARP" class="headerlink" title="ARP"></a>ARP</h3><p>地址解析协议(Address Resolution Protocol)，把一个IPv4地址映射成一个硬件地址(如以太网地址)。ARP通常用于诸如以太网、令牌环网和FDDI等广播网络，在点到点网络上并不需要。</p>
+<hr>
+<p>###RARP</p>
+<p>反向地址解析协议(Reverse Address Resolution Protocol)，把一个硬件地址映射成IPv4地址，有时用于无盘节点的引导。</p>
+<hr>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015-04-28-tcp-term/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1218,7 +1210,7 @@ git commit -C HEAD -a -amend    #增补提交
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

@@ -272,7 +272,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-01T20:31:15+08:00" content="2016-12-01">
+            <time itemprop="dateCreated" datetime="2016-12-01T20:34:42+08:00" content="2016-12-01">
               2016-12-01
             </time>
           </span>
@@ -327,8 +327,7 @@
 
       
         
-          
-            <h3 id="元表与元方法"><a href="#元表与元方法" class="headerlink" title="元表与元方法"></a>元表与元方法</h3><p>在Lua中并没有真正意义上的面向对象的概念，但通过其强大的数据结构table类型，我们可以模拟出面向对象的情境来。在这之前，需要先介绍一下Lua中的元表与元方法。</p>
+          <h3 id="元表与元方法"><a href="#元表与元方法" class="headerlink" title="元表与元方法"></a>元表与元方法</h3><p>在Lua中并没有真正意义上的面向对象的概念，但通过其强大的数据结构table类型，我们可以模拟出面向对象的情境来。在这之前，需要先介绍一下Lua中的元表与元方法。</p>
 <p>元表其实本质上仍是一个table，它为用户提供了自定义行为的途径。在元表中很很多以两个下划线为前缀的键名，我们称为“事件名”，而这个键对应的函数则叫做“元方法”。在元表的键中，除了用于运算操作符、连接操作符、取长操作符和比较操作符之外，还有三种比较常见的键:</p>
 <pre><code>__index : 取下标操作，用于访问表中的域
 __newindex : 赋值操作，增改表中的域
@@ -336,20 +335,159 @@ __call : 函数调用
 </code></pre><p>其中__index在面向对象的实现中十分重要，下面举个例子说明一下__index是如何工作的。当访问一个table中的某个属性时，Lua首先会查找该table中是否包含传入的键，如果找了对应的键，则将对应的值返回。但是如果没有找到键呢，那么Lua会接着去查找该表的元表（当然如果这个表没有元表的话，直接返回nil)，如果元表中包含__index键，则会执行其对应的元方法，若__index对应的是table，则会<strong>递归性</strong>地对这个table的元表中的__index进行查找，代码如下:</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">local</span> t = &#123;&#125;</div><div class="line">t.a <span class="comment">-- is nil</span></div><div class="line"><span class="keyword">local</span> tt = &#123;&#125;</div><div class="line"><span class="built_in">setmetatable</span>(tt, &#123;</div><div class="line">    __index = &#123; a = <span class="number">3</span> &#125;</div><div class="line">&#125;)</div><div class="line">tt.a <span class="comment">-- is 3</span></div></pre></td></tr></table></figure>
 <p>上述代码中，tt表的定义并没有a属性，但是我们为它设置了一个元表，在元表中__index对应的table中定义了a的值等于3，因此当我们访问tt.a的时候就会取到3了。这个特性，也可以应用到面向对象的情境上。</p>
-<h3 id="创建一个类"><a href="#创建一个类" class="headerlink" title="创建一个类"></a>创建一个类</h3><p>当创建一个类时，通常需要包含一个构造函数，并且能够通过new来创建一个该类的实例。实际上每次创建的类的实例对象，本质上仍然是一个table，但通过setmetatable来将类的table设置进去，这样实例就能访问到类的方法与属性了。具体代码如下:</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 封装一个创建类的函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">class</span><span class="params">()</span></span></div><div class="line">    <span class="keyword">local</span> cls = &#123;&#125;</div><div class="line">    cls.__index = cls</div><div class="line"></div><div class="line">    <span class="comment">-- 提供new接口来创建实例</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">cls.new</span><span class="params">(...)</span></span></div><div class="line">        <span class="keyword">local</span> instance = <span class="built_in">setmetatable</span>(&#123;&#125;, cls)</div><div class="line">        <span class="comment">-- 执行构造函数</span></div><div class="line">        instance:ctor(...)</div><div class="line">        <span class="keyword">return</span> instance</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> cls</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="comment">-- 使用实例</span></div><div class="line"><span class="keyword">local</span> A = class()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">A:ctor</span><span class="params">(name)</span></span></div><div class="line">    self.name_ = name</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">A:printName</span><span class="params">()</span></span></div><div class="line">    <span class="built_in">print</span>(self.name_)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="comment">-- 创建类A的实例化对象a，并将传入的"a"通过ctor构造函数设置给self.name_</span></div><div class="line"><span class="keyword">local</span> a = A.new(<span class="string">"a"</span>)</div><div class="line"><span class="comment">-- 执行打印a的name_属性</span></div><div class="line">a:printName()</div></pre></td></tr></table></figure>
-<h3 id="更复杂的类，继承"><a href="#更复杂的类，继承" class="headerlink" title="更复杂的类，继承"></a>更复杂的类，继承</h3><p>继承是面向对象编程中一个很重要的特性，而所谓的继承，就是子类能够对父类进行扩展，支持在子类中调用父类的方法。倘若子类没有某个属性或函数，可以直接使用父类的。在Lua中要实现继承的特性，本质上就是要去递归查找元表，不断地向上检索，直到找到对应的属性和方法，下面我们需要完善一下刚刚的class函数，令父类可以作为参数传递进去。</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">class</span><span class="params">(super)</span></span></div><div class="line">    <span class="keyword">local</span> cls = &#123;&#125;</div><div class="line">    <span class="keyword">if</span> super == <span class="keyword">nil</span> <span class="keyword">then</span></div><div class="line">        cls = &#123; ctor = <span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">end</span> &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        cls = <span class="built_in">setmetatable</span>(&#123;&#125;, super)</div><div class="line">        cls.super = super</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    cls.__index = cls</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">cls.new</span><span class="params">(...)</span></span></div><div class="line">        <span class="keyword">local</span> instance = <span class="built_in">setmetatable</span>(&#123;&#125;, cls)</div><div class="line">        instance:ctor(...)</div><div class="line">        <span class="keyword">return</span> instance</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> cls</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>下面让我们看看该如何在Lua中使用继承机制:</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">Base = class()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Base:ctor</span><span class="params">(name)</span></span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"Base ctor"</span>)</div><div class="line">    self.name_ = name</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Base:printName</span><span class="params">()</span></span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"Base printName "</span>, self.name_)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">Sub = class(Base)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sub:ctor</span><span class="params">(name)</span></span></div><div class="line">    self.super.ctor(self, name)</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Sub ctor"</span>)</div><div class="line">    self.name_ = name</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sub:printName</span><span class="params">()</span></span></div><div class="line">    self.super.printName(self)</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Sub printName "</span>, self.name_)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sub:more</span><span class="params">()</span></span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"Sub more"</span>)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">local</span> sub = Sub.new(<span class="string">"sub"</span>)</div><div class="line">sub:printName()</div><div class="line">sub:more()</div><div class="line"></div><div class="line"><span class="comment">-- 打印结果</span></div><div class="line">Base ctor</div><div class="line">Sub ctor</div><div class="line">Base printName  sub</div><div class="line">Sub printName  sub</div><div class="line">Sub more</div></pre></td></tr></table></figure>
-<p>在上述代码中，子类Sub实现的函数中可以通过self.super来访问父类对应的函数或属性。假设如果子类Sub没有实现printName函数，在执行sub:printName()的时候则会去调用其父类Base的printName函数。</p>
-<h3 id="继承来自C-绑定的userdata"><a href="#继承来自C-绑定的userdata" class="headerlink" title="继承来自C++绑定的userdata"></a>继承来自C++绑定的userdata</h3><p>在quick-cocos2d-x中，更加巧妙地封装了class函数，使得可以在Lua中去继承C++绑定的诸如CCNode等类的userdata。</p>
-<p>使用class函数传入的super参数，如果类型是function或super.__ctype为1，表示该类根父类为C++绑定的userdata。superType是“table”，表示上级父类仍是一个Lua构造的类。首先会遍历super表，依次将对应键值赋给cls表。superType是“function”，表示直接继承着就是C++类，此时传入的参数super必须为function类型，该函数的返回值就是对应的userdata，同时会将super(此时是一个function)赋值给cls.__create，方便之后获取userdata。</p>
-<p>在设置好__cname类名和__ctype标识后，我们再来看看new函数。利用cls.__create(…)来得到父类的userdata，遍历cls并将内容深度拷贝给instance，执行构造函数后并返回instance。以下是具体实现的代码:</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> superType == <span class="string">"function"</span> <span class="keyword">or</span> (super <span class="keyword">and</span> super.__ctype == <span class="number">1</span>) <span class="keyword">then</span></div><div class="line">    <span class="comment">-- inherited from native C++ Object</span></div><div class="line">    cls = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> superType == <span class="string">"table"</span> <span class="keyword">then</span></div><div class="line">        <span class="comment">-- copy fields from super</span></div><div class="line">        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="built_in">pairs</span>(super) <span class="keyword">do</span> cls[k] = v <span class="keyword">end</span></div><div class="line">        cls.__create = super.__create</div><div class="line">        cls.super    = super</div><div class="line">    <span class="keyword">else</span></div><div class="line">        cls.__create = super</div><div class="line">        cls.ctor = <span class="function"><span class="keyword">function</span><span class="params">()</span></span> <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    cls.__cname = classname</div><div class="line">    cls.__ctype = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">cls.new</span><span class="params">(...)</span></span></div><div class="line">        <span class="keyword">local</span> instance = cls.__create(...)</div><div class="line">        <span class="comment">-- copy fields from class to native object</span></div><div class="line">        <span class="keyword">for</span> k,v <span class="keyword">in</span> <span class="built_in">pairs</span>(cls) <span class="keyword">do</span> instance[k] = v <span class="keyword">end</span></div><div class="line">        instance.class = cls</div><div class="line">        instance:ctor(...)</div><div class="line">        <span class="keyword">return</span> instance</div><div class="line">    <span class="keyword">end</span></div><div class="line">...</div></pre></td></tr></table></figure>
-<p>上述代码剩余部分，是处理继承Lua构建类的流程，原理与之前的示例代码一致，不再重复贴出。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016-12-01-lua-oo-implement/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015-01-29-markdown-everywhere/" itemprop="url">
+                  无处不在的Markdown
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-01T20:31:16+08:00" content="2016-12-01">
+              2016-12-01
+            </time>
+          </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程相关/" itemprop="url" rel="index">
+                    <span itemprop="name">编程相关</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015-01-29-markdown-everywhere/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-29-markdown-everywhere/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="什么是Markdown"><a href="#什么是Markdown" class="headerlink" title="什么是Markdown"></a>什么是Markdown</h3><p>Markdown 是一种轻量级标记语言，创始人为约翰·格鲁伯（John Gruber）。它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML(或者HTML)文档”。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。Markdown同时还是一个由Gruber编写的Perl脚本：Markdown.pl。它把用markdown语法编写的内容转换成有效的、结构良好的XHTML或HTML内容，并将左尖括号(‘&lt;’)和&amp;号替换成它们各自的字符实体引用。</p>
+<hr>
+<h3 id="语法简介"><a href="#语法简介" class="headerlink" title="语法简介"></a>语法简介</h3><ul>
+<li><p>段落</p>
+<blockquote>
+<p>上下含有一个以上的空行，会被视为一个独立的段落。</p>
+</blockquote>
+</li>
+<li><p>换行</p>
+<blockquote>
+<p>使用<code>&lt;br&gt;</code>标签，或是结尾处插入两个空格。</p>
+</blockquote>
+</li>
+<li><p>标题</p>
+<pre><code>标题1(最高阶)
+=============
+
+标题2(第二高阶)
+--------------
+
+# 这是H1
+
+## 这是H2
+
+###### 这是H6
+</code></pre></li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015-01-29-markdown-everywhere/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -783,8 +921,8 @@ __call : 函数调用
             
               
                 
-                <a class="post-title-link" href="/2015-01-24-opensource-license-intro/" itemprop="url">
-                  常用开源协议介绍
+                <a class="post-title-link" href="/2015-05-07-vim-ultisnips/" itemprop="url">
+                  VIM下使用自定义代码片段
                 </a>
               
             
@@ -811,8 +949,8 @@ __call : 函数调用
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程相关/" itemprop="url" rel="index">
-                    <span itemprop="name">编程相关</span>
+                  <a href="/categories/编辑器/" itemprop="url" rel="index">
+                    <span itemprop="name">编辑器</span>
                   </a>
                 </span>
 
@@ -827,8 +965,8 @@ __call : 函数调用
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-01-24-opensource-license-intro/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-24-opensource-license-intro/" itemprop="commentsCount"></span>
+                <a href="/2015-05-07-vim-ultisnips/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-05-07-vim-ultisnips/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -852,29 +990,21 @@ __call : 函数调用
 
       
         
-          <h3 id="Apache-2-0"><a href="#Apache-2-0" class="headerlink" title="Apache-2.0"></a><strong>Apache-2.0</strong></h3><ul>
-<li><em>Apache Lience</em></li>
-<li>支持商业用途，允许使用者修改和重新发布代码(以其他协议形式)</li>
-<li>协议规则<ul>
-<li>需要给代码的用户一份Apache Lience</li>
-<li>如果修改了代码，需要在被修改的文件中说明</li>
-<li>在延伸的代码中（修改或衍生的代码）需要带有原来代码中的协议、商标、专利声明和其他原来作者规定需要包含的说明</li>
-<li>如果再发布的产品中包含了Notice文件，则需要在Notice文件中带有Apache Lience</li>
-</ul>
-</li>
-</ul>
-<h3 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a><strong>BSD</strong></h3><ul>
-<li><em>Berkerley Software Distribution</em></li>
-<li>支持商业用途，可使用、修改源码</li>
-<li>协议规则<ul>
-<li>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议</li>
-<li>如果再发布的只是二进制类库/软件，则需要在类库/软件的文档那个和版权声明中包含原来代码中的BSD协议</li>
-<li>不可以用开源代码的“作者/机构的名字”或“原来产品的名字”做市场推广</li>
-</ul>
-</li>
-</ul>
+          <h3 id="常见片段定义"><a href="#常见片段定义" class="headerlink" title="常见片段定义"></a>常见片段定义</h3><h4 id="片段内置默认文本-占位符可以包含其他UltiSnips元素"><a href="#片段内置默认文本-占位符可以包含其他UltiSnips元素" class="headerlink" title="片段内置默认文本(占位符可以包含其他UltiSnips元素)"></a>片段内置默认文本(占位符可以包含其他UltiSnips元素)</h4><pre><code>snippet a
+&lt;a href=&quot;$1&quot;${2: class=&quot;${3:link}&quot;}&gt;
+   $0
+&lt;/a&gt;
+endsnippet
+</code></pre><h4 id="单词开头自动大写"><a href="#单词开头自动大写" class="headerlink" title="单词开头自动大写"></a>单词开头自动大写</h4><pre><code>snippet title &quot;Titelize in the Transformation&quot;
+${1:a text}
+${1/\w+\s*/\u$0/g}
+endsnippet
+</code></pre><h4 id="条件替换"><a href="#条件替换" class="headerlink" title="条件替换"></a>条件替换</h4><pre><code>snippet cond
+${1:some_text}${1/(o)|(t)|..*/(?1:ne)(?2:wo)/}
+endsnippet
+</code></pre>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-01-24-opensource-license-intro/#more" rel="contents">
+            <a class="btn" href="/2015-05-07-vim-ultisnips/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -925,8 +1055,8 @@ __call : 函数调用
             
               
                 
-                <a class="post-title-link" href="/2015-01-29-markdown-everywhere/" itemprop="url">
-                  无处不在的Markdown
+                <a class="post-title-link" href="/2015-09-18-luabinding-in-cocos2dx/" itemprop="url">
+                  基于Cocos2d-x的lua绑定机制
                 </a>
               
             
@@ -953,8 +1083,8 @@ __call : 函数调用
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程相关/" itemprop="url" rel="index">
-                    <span itemprop="name">编程相关</span>
+                  <a href="/categories/Cocos2d-x/" itemprop="url" rel="index">
+                    <span itemprop="name">Cocos2d-x</span>
                   </a>
                 </span>
 
@@ -969,8 +1099,8 @@ __call : 函数调用
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-01-29-markdown-everywhere/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-29-markdown-everywhere/" itemprop="commentsCount"></span>
+                <a href="/2015-09-18-luabinding-in-cocos2dx/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-09-18-luabinding-in-cocos2dx/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -994,165 +1124,24 @@ __call : 函数调用
 
       
         
-          <h3 id="什么是Markdown"><a href="#什么是Markdown" class="headerlink" title="什么是Markdown"></a>什么是Markdown</h3><p>Markdown 是一种轻量级标记语言，创始人为约翰·格鲁伯（John Gruber）。它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML(或者HTML)文档”。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。Markdown同时还是一个由Gruber编写的Perl脚本：Markdown.pl。它把用markdown语法编写的内容转换成有效的、结构良好的XHTML或HTML内容，并将左尖括号(‘&lt;’)和&amp;号替换成它们各自的字符实体引用。</p>
-<hr>
-<h3 id="语法简介"><a href="#语法简介" class="headerlink" title="语法简介"></a>语法简介</h3><ul>
-<li><p>段落</p>
-<blockquote>
-<p>上下含有一个以上的空行，会被视为一个独立的段落。</p>
-</blockquote>
+          <h2 id="关于tolua"><a href="#关于tolua" class="headerlink" title="关于tolua++"></a>关于tolua++</h2><h3 id="tolua如何工作"><a href="#tolua如何工作" class="headerlink" title="tolua如何工作"></a>tolua如何工作</h3><p><a href="https://github.com/LuaDist/toluapp">tolua++</a>是<a href="http://webserver2.tecgraf.puc-rio.br/~celes/tolua/">tolua</a>的扩展版本，一款能够极大地简化C/C++代码与Lua代码集成的工具。tolua基于一份简单干净的头文件，能够自动生成从Lua代码中访问C/C++特性的绑定代码，通过使用Lua API和标记方法工具，tolua来映射管理C/C++中的常量，外部变量，函数，类和方法来给Lua使用。</p>
+<p>使用tolua通常要先建立pkg文件，里面包含对应C/C++头文件中能够被tolua++解析的声明，如常量、变量、函数以及类等。tolua++会根据pkg文件，来生成用于C/C++源文件与Lua交互的c/cpp文件，从而实现Lua中访问指定的C/C++代码。其中，无论是C函数还是C++对象的方法，都一律导出为静态函数。</p>
+<h3 id="如何使用tolua"><a href="#如何使用tolua" class="headerlink" title="如何使用tolua"></a>如何使用tolua</h3><p>生成的tolua++可执行文件，支持一些可选选项，使用./tolua++ -h可进行查看。</p>
+<ul>
+<li><p>使用 <strong>-o</strong> 来指定生成的c/cpp文件</p>
+<p> ./tolua++ -o myfile.c myfile.pkg</p>
 </li>
-<li><p>换行</p>
-<blockquote>
-<p>使用<code>&lt;br&gt;</code>标签，或是结尾处插入两个空格。</p>
-</blockquote>
+<li><p>使用 <strong>-L</strong> 来在优先通过都dofile()来运行一份指定的Lua文件</p>
+<p>  ./tolua++ -o myfile.c myfile.pkg -L rule.lua</p>
 </li>
-<li><p>标题</p>
-<pre><code>标题1(最高阶)
-=============
-
-标题2(第二高阶)
---------------
-
-# 这是H1
-
-## 这是H2
-
-###### 这是H6
-</code></pre></li>
+<li><p>使用 <strong>-n</strong> 来指定导出到lua的package</p>
+<p>  ./tolua++ -n pkgname -o myfile.c myfile.pkg</p>
+<p>绑定生成代码必须被编译并链接到应用程序，才能被Lua代码访问。每一个被解析的package文件代表要导出到Lua的包。默认情况，包名称就是输入文件的名称。用户可以指定一个不同的包名称。在tolua中，需要明确地初始化解析出的对应的包给Lua。在C/C++代码中我们应该调用初始化函数 <strong>int tolua_pkgname_open(void)</strong> 来进行初始化。其中 <em>pkgname</em> 代表被绑定的包的名称。</p>
+<p>更加详细的说明请参考<a href="http://webserver2.tecgraf.puc-rio.br/~celes/tolua/tolua-3.2.html">这里</a>。</p>
+</li>
 </ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-01-29-markdown-everywhere/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015-04-28-tcp-term/" itemprop="url">
-                  TCP相关的术语总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
-              2016-08-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015-04-28-tcp-term/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-04-28-tcp-term/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>传输控制协议(Transmission Controller Protocol)，是一个面向连接的协议，TCP套接字是一种流套接字，为用户进程提供可靠的全双工字节流。</p>
-<hr>
-<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>用户数据报协议(User Datagram Protocl)，是一个无连接协议，UDP套接字是一种数据报套接字，UDP数据报不能保证最终到达目的地，不保证各个数据报的先后顺序夸网络后保持不变，也不保证每个数据报只到达一次。</p>
-<hr>
-<h3 id="ARP"><a href="#ARP" class="headerlink" title="ARP"></a>ARP</h3><p>地址解析协议(Address Resolution Protocol)，把一个IPv4地址映射成一个硬件地址(如以太网地址)。ARP通常用于诸如以太网、令牌环网和FDDI等广播网络，在点到点网络上并不需要。</p>
-<hr>
-<p>###RARP</p>
-<p>反向地址解析协议(Reverse Address Resolution Protocol)，把一个硬件地址映射成IPv4地址，有时用于无盘节点的引导。</p>
-<hr>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015-04-28-tcp-term/#more" rel="contents">
+            <a class="btn" href="/2015-09-18-luabinding-in-cocos2dx/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1235,7 +1224,7 @@ __call : 函数调用
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

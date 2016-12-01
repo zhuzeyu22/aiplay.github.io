@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="爱丸工作室">
 <meta property="og:description" content="元表与元方法在Lua中并没有真正意义上的面向对象的概念，但通过其强大的数据结构table类型，我们可以模拟出面向对象的情境来。在这之前，需要先介绍一下Lua中的元表与元方法。
 元表其实本质上仍是一个table，它为用户提供了自定义行为的途径。在元表中很很多以两个下划线为前缀的键名，我们称为“事件名”，而这个键对应的函数则叫做“元方法”。在元表的键中，除了用于运算操作符、连接操作符、取长操作符和比较">
-<meta property="og:updated_time" content="2016-12-01T12:31:15.000Z">
+<meta property="og:updated_time" content="2016-12-01T12:34:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lua中实现面向对象">
 <meta name="twitter:description" content="元表与元方法在Lua中并没有真正意义上的面向对象的概念，但通过其强大的数据结构table类型，我们可以模拟出面向对象的情境来。在这之前，需要先介绍一下Lua中的元表与元方法。
@@ -271,7 +271,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-01T20:31:15+08:00" content="2016-12-01">
+            <time itemprop="dateCreated" datetime="2016-12-01T20:34:42+08:00" content="2016-12-01">
               2016-12-01
             </time>
           </span>
@@ -333,6 +333,7 @@ __call : 函数调用
 </code></pre><p>其中__index在面向对象的实现中十分重要，下面举个例子说明一下__index是如何工作的。当访问一个table中的某个属性时，Lua首先会查找该table中是否包含传入的键，如果找了对应的键，则将对应的值返回。但是如果没有找到键呢，那么Lua会接着去查找该表的元表（当然如果这个表没有元表的话，直接返回nil)，如果元表中包含__index键，则会执行其对应的元方法，若__index对应的是table，则会<strong>递归性</strong>地对这个table的元表中的__index进行查找，代码如下:</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">local</span> t = &#123;&#125;</div><div class="line">t.a <span class="comment">-- is nil</span></div><div class="line"><span class="keyword">local</span> tt = &#123;&#125;</div><div class="line"><span class="built_in">setmetatable</span>(tt, &#123;</div><div class="line">    __index = &#123; a = <span class="number">3</span> &#125;</div><div class="line">&#125;)</div><div class="line">tt.a <span class="comment">-- is 3</span></div></pre></td></tr></table></figure>
 <p>上述代码中，tt表的定义并没有a属性，但是我们为它设置了一个元表，在元表中__index对应的table中定义了a的值等于3，因此当我们访问tt.a的时候就会取到3了。这个特性，也可以应用到面向对象的情境上。</p>
+<a id="more"></a>
 <h3 id="创建一个类"><a href="#创建一个类" class="headerlink" title="创建一个类"></a>创建一个类</h3><p>当创建一个类时，通常需要包含一个构造函数，并且能够通过new来创建一个该类的实例。实际上每次创建的类的实例对象，本质上仍然是一个table，但通过setmetatable来将类的table设置进去，这样实例就能访问到类的方法与属性了。具体代码如下:</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 封装一个创建类的函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">class</span><span class="params">()</span></span></div><div class="line">    <span class="keyword">local</span> cls = &#123;&#125;</div><div class="line">    cls.__index = cls</div><div class="line"></div><div class="line">    <span class="comment">-- 提供new接口来创建实例</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">cls.new</span><span class="params">(...)</span></span></div><div class="line">        <span class="keyword">local</span> instance = <span class="built_in">setmetatable</span>(&#123;&#125;, cls)</div><div class="line">        <span class="comment">-- 执行构造函数</span></div><div class="line">        instance:ctor(...)</div><div class="line">        <span class="keyword">return</span> instance</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> cls</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="comment">-- 使用实例</span></div><div class="line"><span class="keyword">local</span> A = class()</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">A:ctor</span><span class="params">(name)</span></span></div><div class="line">    self.name_ = name</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">A:printName</span><span class="params">()</span></span></div><div class="line">    <span class="built_in">print</span>(self.name_)</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="comment">-- 创建类A的实例化对象a，并将传入的"a"通过ctor构造函数设置给self.name_</span></div><div class="line"><span class="keyword">local</span> a = A.new(<span class="string">"a"</span>)</div><div class="line"><span class="comment">-- 执行打印a的name_属性</span></div><div class="line">a:printName()</div></pre></td></tr></table></figure>
 <h3 id="更复杂的类，继承"><a href="#更复杂的类，继承" class="headerlink" title="更复杂的类，继承"></a>更复杂的类，继承</h3><p>继承是面向对象编程中一个很重要的特性，而所谓的继承，就是子类能够对父类进行扩展，支持在子类中调用父类的方法。倘若子类没有某个属性或函数，可以直接使用父类的。在Lua中要实现继承的特性，本质上就是要去递归查找元表，不断地向上检索，直到找到对应的属性和方法，下面我们需要完善一下刚刚的class函数，令父类可以作为参数传递进去。</p>
@@ -392,8 +393,8 @@ __call : 函数调用
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016-11-24-genymotion-simulator-download/" rel="next" title="Genymotion模拟器下载失败的解决方案">
-                <i class="fa fa-chevron-left"></i> Genymotion模拟器下载失败的解决方案
+              <a href="/2015-01-29-markdown-everywhere/" rel="next" title="无处不在的Markdown">
+                <i class="fa fa-chevron-left"></i> 无处不在的Markdown
               </a>
             
           </div>
@@ -501,7 +502,7 @@ __call : 函数调用
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
