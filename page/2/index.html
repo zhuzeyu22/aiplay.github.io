@@ -258,8 +258,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015-01-24-opensource-license-intro/" itemprop="url">
-                  常用开源协议介绍
+                <a class="post-title-link" href="/2015-05-07-vim-ultisnips/" itemprop="url">
+                  VIM下使用自定义代码片段
                 </a>
               
             
@@ -286,8 +286,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程相关/" itemprop="url" rel="index">
-                    <span itemprop="name">编程相关</span>
+                  <a href="/categories/编辑器/" itemprop="url" rel="index">
+                    <span itemprop="name">编辑器</span>
                   </a>
                 </span>
 
@@ -302,8 +302,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-01-24-opensource-license-intro/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-24-opensource-license-intro/" itemprop="commentsCount"></span>
+                <a href="/2015-05-07-vim-ultisnips/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-05-07-vim-ultisnips/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -327,29 +327,149 @@
 
       
         
-          <h3 id="Apache-2-0"><a href="#Apache-2-0" class="headerlink" title="Apache-2.0"></a><strong>Apache-2.0</strong></h3><ul>
-<li><em>Apache Lience</em></li>
-<li>支持商业用途，允许使用者修改和重新发布代码(以其他协议形式)</li>
-<li>协议规则<ul>
-<li>需要给代码的用户一份Apache Lience</li>
-<li>如果修改了代码，需要在被修改的文件中说明</li>
-<li>在延伸的代码中（修改或衍生的代码）需要带有原来代码中的协议、商标、专利声明和其他原来作者规定需要包含的说明</li>
-<li>如果再发布的产品中包含了Notice文件，则需要在Notice文件中带有Apache Lience</li>
-</ul>
-</li>
-</ul>
-<h3 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a><strong>BSD</strong></h3><ul>
-<li><em>Berkerley Software Distribution</em></li>
-<li>支持商业用途，可使用、修改源码</li>
-<li>协议规则<ul>
-<li>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议</li>
-<li>如果再发布的只是二进制类库/软件，则需要在类库/软件的文档那个和版权声明中包含原来代码中的BSD协议</li>
-<li>不可以用开源代码的“作者/机构的名字”或“原来产品的名字”做市场推广</li>
-</ul>
-</li>
-</ul>
+          <h3 id="常见片段定义"><a href="#常见片段定义" class="headerlink" title="常见片段定义"></a>常见片段定义</h3><h4 id="片段内置默认文本-占位符可以包含其他UltiSnips元素"><a href="#片段内置默认文本-占位符可以包含其他UltiSnips元素" class="headerlink" title="片段内置默认文本(占位符可以包含其他UltiSnips元素)"></a>片段内置默认文本(占位符可以包含其他UltiSnips元素)</h4><pre><code>snippet a
+&lt;a href=&quot;$1&quot;${2: class=&quot;${3:link}&quot;}&gt;
+   $0
+&lt;/a&gt;
+endsnippet
+</code></pre><h4 id="单词开头自动大写"><a href="#单词开头自动大写" class="headerlink" title="单词开头自动大写"></a>单词开头自动大写</h4><pre><code>snippet title &quot;Titelize in the Transformation&quot;
+${1:a text}
+${1/\w+\s*/\u$0/g}
+endsnippet
+</code></pre><h4 id="条件替换"><a href="#条件替换" class="headerlink" title="条件替换"></a>条件替换</h4><pre><code>snippet cond
+${1:some_text}${1/(o)|(t)|..*/(?1:ne)(?2:wo)/}
+endsnippet
+</code></pre>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-01-24-opensource-license-intro/#more" rel="contents">
+            <a class="btn" href="/2015-05-07-vim-ultisnips/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2014-11-05-python-file-io/" itemprop="url">
+                  Python中常用的相关文件操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程语言/" itemprop="url" rel="index">
+                    <span itemprop="name">编程语言</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014-11-05-python-file-io/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014-11-05-python-file-io/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="获取当前工作目录"><a href="#获取当前工作目录" class="headerlink" title="获取当前工作目录"></a>获取当前工作目录</h3><pre><code>os.getcwd()
+</code></pre><h3 id="获取执行脚本所在路径"><a href="#获取执行脚本所在路径" class="headerlink" title="获取执行脚本所在路径"></a>获取执行脚本所在路径</h3><pre><code>sys.path[0]
+</code></pre><h3 id="判断目录是否存在"><a href="#判断目录是否存在" class="headerlink" title="判断目录是否存在"></a>判断目录是否存在</h3><pre><code>os.path.exists(path)  返回false表示不存在
+</code></pre><h3 id="删除一个非空的目录"><a href="#删除一个非空的目录" class="headerlink" title="删除一个非空的目录"></a>删除一个非空的目录</h3><pre><code>import shutil
+
+shutil.rmtree(path)
+</code></pre>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014-11-05-python-file-io/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -532,8 +652,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015-01-03-year-summary/" itemprop="url">
-                  我的2014-2015
+                <a class="post-title-link" href="/2015-parse-cpp-in-python/" itemprop="url">
+                  在Python中使用Clang来解析C++【翻译】
                 </a>
               
             
@@ -560,8 +680,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/个人随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">个人随笔</span>
+                  <a href="/categories/编程相关/" itemprop="url" rel="index">
+                    <span itemprop="name">编程相关</span>
                   </a>
                 </span>
 
@@ -576,8 +696,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-01-03-year-summary/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-01-03-year-summary/" itemprop="commentsCount"></span>
+                <a href="/2015-parse-cpp-in-python/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-parse-cpp-in-python/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -601,9 +721,13 @@
 
       
         
-          <h2 id="回顾2014"><a href="#回顾2014" class="headerlink" title="回顾2014"></a>回顾2014</h2><h3 id="1-搭建自己的github博客，学习通过使用md来写博客"><a href="#1-搭建自己的github博客，学习通过使用md来写博客" class="headerlink" title="1. 搭建自己的github博客，学习通过使用md来写博客"></a>1. 搭建自己的github博客，学习通过使用md来写博客</h3><h3 id="2-学习使用github来关注一些优秀的开源项目"><a href="#2-学习使用github来关注一些优秀的开源项目" class="headerlink" title="2. 学习使用github来关注一些优秀的开源项目"></a>2. 学习使用github来关注一些优秀的开源项目</h3><h3 id="3-自学了python脚本语言，用于日常工作开发中的一些工具的编写"><a href="#3-自学了python脚本语言，用于日常工作开发中的一些工具的编写" class="headerlink" title="3. 自学了python脚本语言，用于日常工作开发中的一些工具的编写"></a>3. 自学了python脚本语言，用于日常工作开发中的一些工具的编写</h3><h3 id="4-完成阅读了《代码大全》"><a href="#4-完成阅读了《代码大全》" class="headerlink" title="4. 完成阅读了《代码大全》"></a>4. 完成阅读了《代码大全》</h3><h3 id="5-搭建了适合自己使用的vim环境，使用tmux和zsh来进行开发工作"><a href="#5-搭建了适合自己使用的vim环境，使用tmux和zsh来进行开发工作" class="headerlink" title="5. 搭建了适合自己使用的vim环境，使用tmux和zsh来进行开发工作"></a>5. 搭建了适合自己使用的vim环境，使用tmux和zsh来进行开发工作</h3>
+          <p>   <a href="http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang">原文地址</a></p>
+<p>Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的<a href="https://github.com/eliben/llvm-clang-samples">llvm-clang-samples repository仓库</a>。</p>
+<p>对于那些需要在Python中去解析和分析C代码的人，在发现<a href="https://github.com/eliben/pycparser">pycparser</a>后一定会很兴奋。然而，如果变成是去解析C++，pycparser并不是好的解决办法。当我被问及关于在pycparser中增加支持C++的计划时，我的回答通常是 – 没有这样的计划，你应该去别处找找。尤其地，是在<a href="http://clang.llvm.org/">Clang</a>中。</p>
+<p>Clang是一款针对C，C++和Object C的编译器前端。它是由Apple支持的一款具有自由协议的开源项目，并使用它们自己的工具。连同它的父项目 – LLVM编译器后端，Clang渐渐成为一款gcc的强大替代品。在Clang（包括LLVM）身后有着一流的开发团队，并且它的代码在开源环境下也是C++代码中设计最好的之一。Clang的发展十分积极，密切关注着最新的C++标准。</p>
+<p>于是当我被问关于解析C++的问题的时候，我的回答总是Clang。诚然，它还存在着一些小问题。人们喜欢pycparser因为它是Python实现的，而Clang的API接口是C++，并不是最极客并友好的语言，退一步来说。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015-01-03-year-summary/#more" rel="contents">
+            <a class="btn" href="/2015-parse-cpp-in-python/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -916,8 +1040,8 @@ sudo make install
             
               
                 
-                <a class="post-title-link" href="/2015-parse-cpp-in-python/" itemprop="url">
-                  在Python中使用Clang来解析C++【翻译】
+                <a class="post-title-link" href="/2014-11-07-github-operation/" itemprop="url">
+                  常用的Git操作
                 </a>
               
             
@@ -944,8 +1068,8 @@ sudo make install
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程相关/" itemprop="url" rel="index">
-                    <span itemprop="name">编程相关</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -960,8 +1084,8 @@ sudo make install
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015-parse-cpp-in-python/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015-parse-cpp-in-python/" itemprop="commentsCount"></span>
+                <a href="/2014-11-07-github-operation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014-11-07-github-operation/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -985,141 +1109,33 @@ sudo make install
 
       
         
-          <p>   <a href="http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang">原文地址</a></p>
-<p>Clang的API发展十分迅速，其中也包括libclang和Python绑定。因此，本次推送中的示例可能不再起作用。如果想要那些基于最新的Clang的工作示例，请检查我在Github上的<a href="https://github.com/eliben/llvm-clang-samples">llvm-clang-samples repository仓库</a>。</p>
-<p>对于那些需要在Python中去解析和分析C代码的人，在发现<a href="https://github.com/eliben/pycparser">pycparser</a>后一定会很兴奋。然而，如果变成是去解析C++，pycparser并不是好的解决办法。当我被问及关于在pycparser中增加支持C++的计划时，我的回答通常是 – 没有这样的计划，你应该去别处找找。尤其地，是在<a href="http://clang.llvm.org/">Clang</a>中。</p>
-<p>Clang是一款针对C，C++和Object C的编译器前端。它是由Apple支持的一款具有自由协议的开源项目，并使用它们自己的工具。连同它的父项目 – LLVM编译器后端，Clang渐渐成为一款gcc的强大替代品。在Clang（包括LLVM）身后有着一流的开发团队，并且它的代码在开源环境下也是C++代码中设计最好的之一。Clang的发展十分积极，密切关注着最新的C++标准。</p>
-<p>于是当我被问关于解析C++的问题的时候，我的回答总是Clang。诚然，它还存在着一些小问题。人们喜欢pycparser因为它是Python实现的，而Clang的API接口是C++，并不是最极客并友好的语言，退一步来说。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015-parse-cpp-in-python/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
+          <h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><pre><code>git config -global user.name &lt;name&gt;     #设置提交者名字
 
-    <div>
-      
-    </div>
+git config -global user.email &lt;email&gt;   #设置提交者邮箱
 
-    <div>
-      
-    </div>
+git config -global core.editor &lt;editor&gt; #设置默认文本编辑器
 
-    <footer class="post-footer">
-      
+git config -global merge.tool &lt;tool&gt;    #设置解决合并冲突时差异分析工具
+</code></pre><h3 id="修改和提交"><a href="#修改和提交" class="headerlink" title="修改和提交"></a>修改和提交</h3><pre><code>git add .                       #添加所有改动过的文件
 
-      
+git add &lt;file&gt;                  #添加指定的文件
 
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
+git mv &lt;old&gt; &lt;new&gt;              #文件重命名
 
+git rm &lt;file&gt;                   #删除文件
 
-    
-      
+git rm -cached &lt;file&gt;           #停止跟踪文件但不删除
 
-  
-  
+git commit -m &lt;file&gt;            #提交指定文件
 
-  
-  
-  
+git commit -m &quot;commit message&quot;  #提交所有更新过的文件
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+git commit -amend               #修改最后一次提交
 
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2014-11-05-python-file-io/" itemprop="url">
-                  Python中常用的相关文件操作
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T19:12:57+08:00" content="2016-08-24">
-              2016-08-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程语言/" itemprop="url" rel="index">
-                    <span itemprop="name">编程语言</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2014-11-05-python-file-io/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2014-11-05-python-file-io/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="获取当前工作目录"><a href="#获取当前工作目录" class="headerlink" title="获取当前工作目录"></a>获取当前工作目录</h3><pre><code>os.getcwd()
-</code></pre><h3 id="获取执行脚本所在路径"><a href="#获取执行脚本所在路径" class="headerlink" title="获取执行脚本所在路径"></a>获取执行脚本所在路径</h3><pre><code>sys.path[0]
-</code></pre><h3 id="判断目录是否存在"><a href="#判断目录是否存在" class="headerlink" title="判断目录是否存在"></a>判断目录是否存在</h3><pre><code>os.path.exists(path)  返回false表示不存在
-</code></pre><h3 id="删除一个非空的目录"><a href="#删除一个非空的目录" class="headerlink" title="删除一个非空的目录"></a>删除一个非空的目录</h3><pre><code>import shutil
-
-shutil.rmtree(path)
+git commit -C HEAD -a -amend    #增补提交
 </code></pre>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014-11-05-python-file-io/#more" rel="contents">
+            <a class="btn" href="/2014-11-07-github-operation/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1194,7 +1210,7 @@ shutil.rmtree(path)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1202,7 +1218,7 @@ shutil.rmtree(path)
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1211,7 +1227,7 @@ shutil.rmtree(path)
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
